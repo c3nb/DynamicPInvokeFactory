@@ -9,14 +9,9 @@ using System.Runtime.InteropServices;
 [SuppressUnmanagedCodeSecurity]
 public static class DynamicPInvokeFactory
 {
-    public static unsafe IntPtr GetAddress(this object o)
-    {
-        TypedReference tr = __makeref(o);
-        return **(IntPtr**)&tr;
-    }
     static DynamicPInvokeFactory()
     {
-        string asmName = "DynamicPInvokeFactory" + new object().GetAddress();
+        string asmName = "DynamicPInvokeFactory" + DateTime.Now.Ticks;
         asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.RunAndSave);
         moduleBuilder = asmBuilder.DefineDynamicModule($"Module", "PInvoke.dll", true);
     }
