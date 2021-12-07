@@ -12,13 +12,12 @@ public static class DynamicPInvokeFactory
     static DynamicPInvokeFactory()
     {
         string asmName = "DynamicPInvokeFactory" + DateTime.Now.Ticks;
-        asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.RunAndSave);
-        moduleBuilder = asmBuilder.DefineDynamicModule($"Module", "PInvoke.dll", true);
+        asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.Run);
+        moduleBuilder = asmBuilder.DefineDynamicModule($"Module", true);
     }
     static int TypeCount;
     static readonly AssemblyBuilder asmBuilder;
     static readonly ModuleBuilder moduleBuilder;
-    public static void Save(string path) => asmBuilder.Save(path);
     public static T GetPInvokeMethod<T>(string dllPath) where T : Delegate
     {
         Type delType = typeof(T);
