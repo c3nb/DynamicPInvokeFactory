@@ -12,12 +12,13 @@ public static class DynamicPInvokeFactory
     static DynamicPInvokeFactory()
     {
         string asmName = "DynamicPInvokeFactory" + DateTime.Now.Ticks;
-        asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.Run);
-        moduleBuilder = asmBuilder.DefineDynamicModule($"Module", true);
+        asmBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(asmName), AssemblyBuilderAccess.RunAndSave);
+        moduleBuilder = asmBuilder.DefineDynamicModule($"Module", "PInvoke.dll", true);
     }
     static int TypeCount;
     static readonly AssemblyBuilder asmBuilder;
     static readonly ModuleBuilder moduleBuilder;
+    public static void Save(string path) => asmBuilder.Save(path);
     public static T GetPInvokeMethod<T>(string dllPath) where T : Delegate
     {
         Type delType = typeof(T);
@@ -108,8 +109,8 @@ public static class DynamicPInvokeFactory
         MethodInfo delMethod = delType.GetMethod("Invoke");
         var parametersArray = delMethod.GetParameters();
         List<ParameterInfo> parameters = parametersArray.ToList();
-        T t = (T)GetPInvokeMethod(delType.Name, dllPath, delMethod.ReturnType, null, parametersArray,
-            CallingConvention.StdCall, CallingConventions.Standard,
+        T t = (T)GetPInvokeMethod(delType.Name, dllPath, delMethod.ReturnType, entryPoint, parametersArray,
+            callingConvention, CallingConventions.Standard,
             CharSet.Auto, parameters.Select(x => x.ParameterType).ToArray())
             .CreateDelegate(typeof(T));
         return t;
@@ -141,3 +142,4 @@ public static class DynamicPInvokeFactory
         return typeBuilder.CreateType().GetMethod(methodName);
     }
 }
+
