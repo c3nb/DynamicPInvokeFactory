@@ -1,5 +1,5 @@
 # DynamicPInvokeFactory
-DllImport Without WinAPI or DllImportAttribute.
+DllImport DllImportAttribute.
 ## How To Use
 ### Example
 ```
