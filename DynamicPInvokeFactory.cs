@@ -111,7 +111,7 @@ public static class DynamicPInvokeFactory
         List<ParameterInfo> parameters = parametersArray.ToList();
         T t = (T)GetPInvokeMethod(delType.Name, dllPath, delMethod.ReturnType, entryPoint, parametersArray,
             callingConvention, CallingConventions.Standard,
-            CharSet.Auto, parameters.Select(x => x.ParameterType).ToArray())
+            charSet, parameters.Select(x => x.ParameterType).ToArray())
             .CreateDelegate(typeof(T));
         return t;
     }
